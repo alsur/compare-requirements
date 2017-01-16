@@ -9,9 +9,9 @@ installed dependencies (pip freeze) vs dependencies in requirements.txt
     
 Available arguments:
     
-    * **file1**: First file to compare. By default requirements.txt
-    * **file2**: Second file to compare. By default ``pip freeze`` output.
-    * **--pipdeptree**: Use pipdeptree instead ``pip freeze`` and show only dependencies that have not been installed by other dependencies.
+* **file1**: First file to compare. By default requirements.txt
+* **file2**: Second file to compare. By default ``pip freeze`` output.
+* **--pipdeptree**: Use pipdeptree instead ``pip freeze`` and show only dependencies that have not been installed by other dependencies.
 
 
 Output example::
