@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+"""Compare requirements files created by Pip (Python)
+"""
+from cmpreqs.compare_requirements import compare, read_freeze, read_pipdeptree
+
+if __name__ == '__main__':
+    import sys
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('req1', nargs='?', help='First requirement file',
+                        default='requirements.txt')
+    parser.add_argument('req2', nargs='?',
+                        help='Second requirement file. By default, uses pip freeze.')
+    parser.add_argument('--pipdeptree', action='store_true')
+    args = parser.parse_args()
+    if args.req2:
+        req2 = open(args.req2)
+    elif args.pipdeptree:
+        req2 = read_pipdeptree()
+    else:
+        req2 = read_freeze()
+    compare(open(args.req1), req2)
+ 
