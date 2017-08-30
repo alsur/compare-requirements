@@ -8,7 +8,7 @@ def get_version(line):
     else:
         d = line.split('==')
         if len(d) > 1:
-            return d[1]
+            return d[1].split('#')[0].strip()
         else:
             return
 
