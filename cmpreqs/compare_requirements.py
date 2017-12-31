@@ -8,7 +8,7 @@ def get_version(line):
     else:
         d = line.split('==')
         if len(d) > 1:
-            return d[1]
+            return d[1].split('#')[0].strip()
         else:
             return
 
@@ -17,7 +17,7 @@ def get_package_name(line):
     if 'git+' in line or 'hg+' in line:
         return line.split('#egg=')[1]
     else:
-        return line.split('==')[0]
+        return line.split('==')[0].lower()
     
     
 def get_requirements(indata):
