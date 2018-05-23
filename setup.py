@@ -3,7 +3,7 @@
 """Package description
 """
 from setuptools import setup, find_packages
-from pip.req import parse_requirements
+from pip._internal.req import parse_requirements
 from distutils.util import convert_path
 from fnmatch import fnmatchcase
 import os
