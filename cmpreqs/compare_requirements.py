@@ -2,11 +2,22 @@
 import subprocess
 from io import StringIO
 
+def seperate_version_from_name(line):
+    if "==" in line:
+        return line.split('==')
+    elif ">=" in line:
+        return line.split('>=')
+    elif ">" in line:
+        return line.split('>')
+    else:
+        return [line]
+
+
 def get_version(line):
     if 'git+' in line or 'hg+' in line:
         return line.split('@')[-1].split('#')[0]
     else:
-        d = line.split('==')
+        d = seperate_version_from_name(line)
         if len(d) > 1:
             return d[1].split('#')[0].strip()
         else:
@@ -17,9 +28,8 @@ def get_package_name(line):
     if 'git+' in line or 'hg+' in line:
         return line.split('#egg=')[1]
     else:
-        return line.split('==')[0].lower()
-    
-    
+        return seperate_version_from_name(line)[0].lower()
+
 def get_requirements(indata):
     requirements = {}
     lines = indata.readlines()
@@ -28,6 +38,8 @@ def get_requirements(indata):
             continue
         line = line.replace('\n', '')
         line = line.replace('\r', '')
+        if "comment" in get_package_name(line):
+            print("-----",get_package_name(line), "-----")
         requirements[get_package_name(line)] = get_version(line)
     return requirements
 
@@ -43,8 +55,8 @@ def print_columns(rows, titles=False):
         rows = [rows[0]] + [['-' * width for width in widths]] + rows[1:]
     for row in rows:
         print("  ".join((str(val).ljust(width) for val, width in zip(row, widths))))
-    
-    
+
+
 def get_input_title(indata, index=None):
     return getattr(indata, 'name', 'Input {}'.format(index or '?'))
 
@@ -53,8 +65,8 @@ def print_title(name):
     print()
     print(name)
     print('=' * len(name))
-    
-    
+
+
 def compare(input1, input2):
     requirements1 = get_requirements(input1)
     requirements2 = get_requirements(input2)
@@ -71,22 +83,22 @@ def compare(input1, input2):
     for file, reqs in not_in.items():
         print_title('Only available on {}'.format(file))
         print_columns([[name, ver] for name, ver in req_not_in(*reqs).items()], ['Name', 'Version'])
-        
-        
+
+
 def read_freeze():
     if sys.version_info[0] == 3:
         # Use Python3 version of pip if we are using Python3 to run this script. Assumes usage of same version of python in a project
         return StringIO(subprocess.check_output(['pip3', 'freeze']).decode('utf-8'))
     else:
         return StringIO(subprocess.check_output(['pip', 'freeze']).decode('utf-8'))
-            
+
 
 def read_pipdeptree():
     data = subprocess.check_output(['pipdeptree']).decode('utf-8')
     data = [x for x in data.split('\n') if x and not x[0] in ['-', ' ', '*']]
     return StringIO('\n'.join(data))
 
-        
+
 if __name__ == '__main__':
     import sys
     compare(open(sys.argv[1]), open(sys.argv[2]))
