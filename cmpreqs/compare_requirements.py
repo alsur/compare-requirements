@@ -38,8 +38,6 @@ def get_requirements(indata):
             continue
         line = line.replace('\n', '')
         line = line.replace('\r', '')
-        if "comment" in get_package_name(line):
-            print("-----",get_package_name(line), "-----")
         requirements[get_package_name(line)] = get_version(line)
     return requirements
 
