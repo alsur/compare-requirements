@@ -74,7 +74,11 @@ def compare(input1, input2):
         
         
 def read_freeze():
-    return StringIO(subprocess.check_output(['pip', 'freeze']).decode('utf-8'))
+    if sys.version_info[0] == 3:
+        # Use Python3 version of pip if we are using Python3 to run this script. Assumes usage of same version of python in a project
+        return StringIO(subprocess.check_output(['pip3', 'freeze']).decode('utf-8'))
+    else:
+        return StringIO(subprocess.check_output(['pip', 'freeze']).decode('utf-8'))
             
 
 def read_pipdeptree():
