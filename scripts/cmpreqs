@@ -19,5 +19,5 @@ if __name__ == '__main__':
         req2 = read_pipdeptree()
     else:
         req2 = read_freeze()
+        req2.name = "'pip3 freeze'"
     compare(open(args.req1), req2)
- 
